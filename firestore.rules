@@ -1,0 +1,148 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (matches auth.uid)
+    // Fields:
+    //   - uid: string (required) - The user's unique ID
+    //   - email: string (required) - The user's email
+    //   - name: string (optional) - The user's display name
+    //   - role: string (required, enum: ['student', 'teacher']) - User role
+    //   - createdAt: timestamp (optional) - Creation time
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return isAuthenticated() && userDoc.data != null &&
+        (userDoc.data.role == 'admin' ||
+         (request.auth.token.email == "vmtien.dhkm17a2hn@sv.uneti.edu.vn" && request.auth.token.email_verified == true));
+    }
+    
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.role in ['student', 'teacher', 'admin'] &&
+             data.uid == request.auth.uid;
+    }
+
+    function isTeacherOfClass(classId) {
+      let classDoc = get(/databases/$(database)/documents/classes/$(classId));
+      return isAuthenticated() && classDoc.data != null && classDoc.data.teacherId == request.auth.uid;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated(); // Allow all users to read profiles for names/avatars
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && 
+                      request.resource.data.role == resource.data.role; // Role is immutable
+    }
+
+    match /classes/{classId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.teacherId == request.auth.uid;
+      allow update, delete: if isAdmin() || (isAuthenticated() && resource.data.teacherId == request.auth.uid);
+    }
+
+    match /enrollments/{enrollmentId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.studentId == request.auth.uid);
+    }
+
+    match /topics/{topicId} {
+      allow read: if isAuthenticated();
+      allow create: if isTeacherOfClass(request.resource.data.classId);
+      allow update, delete: if isAdmin() || isTeacherOfClass(resource.data.classId);
+    }
+
+    match /assignments/{assignmentId} {
+      allow read: if isAuthenticated();
+      allow create: if isTeacherOfClass(request.resource.data.classId);
+      allow update, delete: if isAdmin() || isTeacherOfClass(resource.data.classId);
+    }
+
+    match /quizSubmissions/{submissionId} {
+      // Temporarily allow any authenticated user to read quiz submissions to avoid
+      // permission-denied errors during debugging. Narrow this back later.
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.get('studentId', null) == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        (resource.data.get('studentId', null) == request.auth.uid && request.resource.data.get('studentId', null) == request.auth.uid && resource.data.get('status', '') != 'graded') ||
+        resource.data.get('teacherId', null) == request.auth.uid ||
+        isAdmin()
+      );
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.get('studentId', null) == request.auth.uid && resource.data.get('status', '') != 'graded');
+    }
+
+    match /submissions/{submissionId} {
+      allow read: if isAuthenticated() && (
+        resource.data.studentId == request.auth.uid || 
+        resource.data.teacherId == request.auth.uid ||
+        isTeacherOfClass(resource.data.classId) ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        (resource.data.studentId == request.auth.uid && request.resource.data.studentId == request.auth.uid && resource.data.status != 'graded') || 
+        resource.data.teacherId == request.auth.uid ||
+        isAdmin()
+      );
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.studentId == request.auth.uid && resource.data.status != 'graded');
+    }
+
+    match /posts/{postId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || (isAuthenticated() && (
+        resource.data.authorName == request.auth.token.name || 
+        isTeacherOfClass(resource.data.classId)
+      ));
+    }
+
+    match /notifications/{notificationId} {
+      // Temporarily allow authenticated reads for notifications to avoid listener permission errors.
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    match /privateComments/{commentId} {
+      allow read: if isAuthenticated() && (
+        resource.data.get('authorId', null) == request.auth.uid ||
+        resource.data.get('studentId', null) == request.auth.uid ||
+        resource.data.get('teacherId', null) == request.auth.uid ||
+        isTeacherOfClass(resource.data.get('classId', ''))
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.get('authorId', null) == request.auth.uid &&
+        (
+          request.resource.data.get('studentId', null) == request.auth.uid ||
+          request.resource.data.get('teacherId', null) == request.auth.uid ||
+          isTeacherOfClass(request.resource.data.get('classId', ''))
+        )
+      );
+    }
+  }
+}

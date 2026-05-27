@@ -1,0 +1,52 @@
+[2026-04-23T08:18:45.444Z] Submission Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-c7976f0811fsm14584427a12.0 - gsmtp
+Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-c7976f0811fsm14584427a12.0 - gsmtp
+    at SMTPConnection._formatError (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:887:19)
+    at SMTPConnection._actionAUTHComplete (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1695:34)
+    at SMTPConnection.<anonymous> (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:626:26)
+    at SMTPConnection._processResponse (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1072:20)
+    at SMTPConnection._onData (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:847:14)
+    at SMTPConnection._onSocketData (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:217:44)
+    at TLSSocket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:189:23)
+
+[2026-04-23T08:34:44.452Z] Submission Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-362c69b8257sm4710998a91.7 - gsmtp
+Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-362c69b8257sm4710998a91.7 - gsmtp
+    at SMTPConnection._formatError (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:887:19)
+    at SMTPConnection._actionAUTHComplete (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1695:34)
+    at SMTPConnection.<anonymous> (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:626:26)
+    at SMTPConnection._processResponse (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1072:20)
+    at SMTPConnection._onData (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:847:14)
+    at SMTPConnection._onSocketData (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:217:44)
+    at TLSSocket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:189:23)
+
+[2026-04-24T01:28:06.572Z] Submission Error: Message failed: 552-5.7.0 This message was blocked because its content presents a potential
+552-5.7.0 security issue. To review our message content and attachment content
+552-5.7.0 guidelines, go to
+552 5.7.0  https://support.google.com/mail/?p=BlockedMessage d9443c01a7336-2b5fab0cf67sm201643335ad.51 - gsmtp
+Error: Message failed: 552-5.7.0 This message was blocked because its content presents a potential
+552-5.7.0 security issue. To review our message content and attachment content
+552-5.7.0 guidelines, go to
+552 5.7.0  https://support.google.com/mail/?p=BlockedMessage d9443c01a7336-2b5fab0cf67sm201643335ad.51 - gsmtp
+    at SMTPConnection._formatError (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:887:19)
+    at SMTPConnection._actionSMTPStream (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1824:34)
+    at SMTPConnection.<anonymous> (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1296:22)
+    at SMTPConnection._processResponse (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:1072:20)
+    at SMTPConnection._onData (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:847:14)
+    at SMTPConnection._onSocketData (D:\android studio\EDUNEST hoan chinh\edunest v4\node_modules\nodemailer\lib\smtp-connection\index.js:217:44)
+    at TLSSocket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:189:23)
+

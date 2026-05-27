@@ -1,0 +1,173 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information including role",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The unique identifier for the user"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address"
+        },
+        "name": {
+          "type": "string",
+          "description": "The user's display name"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["student", "teacher"],
+          "description": "The user's role in the system"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the user account was created"
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "Classroom information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "section": { "type": "string" },
+        "teacherId": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "bannerColor": { "type": "string" },
+        "classCode": { "type": "string", "description": "Unique code to join the class" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "teacherId", "classCode"]
+    },
+    "Enrollment": {
+      "title": "Enrollment",
+      "description": "Mapping of students to classes",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "classId": { "type": "string" },
+        "enrolledAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "classId"]
+    },
+    "Topic": {
+      "title": "Topic",
+      "description": "Topic or folder for class materials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "classId": { "type": "string" },
+        "name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["classId", "name"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Class assignment details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "classId": { "type": "string" },
+        "topicId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "points": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["classId", "title", "dueDate"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "Student submission for an assignment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "assignmentId": { "type": "string" },
+        "classId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "studentEmail": { "type": "string" },
+        "status": { "type": "string", "enum": ["turned-in", "graded"] },
+        "grade": { "type": "number" },
+        "fileName": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["assignmentId", "classId", "studentId", "status"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Class stream post",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "classId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorAvatar": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["classId", "authorName", "content"]
+    },
+    "PrivateComment": {
+      "title": "PrivateComment",
+      "description": "Private message between student and teacher regarding a submission",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "submissionId": { "type": "string" },
+        "studentId": { "type": "string", "description": "The ID of the student who owns the submission" },
+        "teacherId": { "type": "string", "description": "The ID of the teacher who owns the class" },
+        "classId": { "type": "string", "description": "The ID of the class the submission belongs to" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["submissionId", "studentId", "teacherId", "classId", "authorId", "content"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles"
+    },
+    "/classes/{classId}": {
+      "schema": "Class",
+      "description": "Collection of classes"
+    },
+    "/enrollments/{enrollmentId}": {
+      "schema": "Enrollment",
+      "description": "Collection of student enrollments"
+    },
+    "/topics/{topicId}": {
+      "schema": "Topic",
+      "description": "Collection of class topics/folders"
+    },
+    "/assignments/{assignmentId}": {
+      "schema": "Assignment",
+      "description": "Collection of class assignments"
+    },
+    "/submissions/{submissionId}": {
+      "schema": "Submission",
+      "description": "Collection of student submissions"
+    },
+    "/posts/{postId}": {
+      "schema": "Post",
+      "description": "Collection of class stream posts"
+    },
+    "/privateComments/{commentId}": {
+      "schema": "PrivateComment",
+      "description": "Collection of private comments for submissions"
+    }
+  }
+}
